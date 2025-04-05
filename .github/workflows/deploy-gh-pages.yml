@@ -2,7 +2,7 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [main] # mainブランチにプッシュされたときに実行
+    branches: [main]
 
 jobs:
   build-and-deploy:
@@ -11,23 +11,32 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Show current directory (before cd)
+        run: pwd
+
+      - name: Change working directory
+        run: cd hello
+
+      - name: Show current directory (after cd)
+        run: pwd
+
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 'lts/*'
 
       - name: Install dependencies
-        run: npm install # または yarn install
+        run: npm install
 
       - name: Build React application
-        run: npm run build # または yarn build
+        run: npm run build
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           branch: gh-pages
-          folder: build # ビルドされた出力フォルダ名 (Create React Appの場合)
+          folder: build # ビルド後のフォルダ名に合わせてください。もし hello の直下に出力されるなら "." に変更
           repository-name: ${{ github.repository }}
           user-name: ${{ github.event.pusher.name }}
           user-email: ${{ github.event.pusher.email }}
