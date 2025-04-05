@@ -1,0 +1,33 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main] # mainブランチにプッシュされたときに実行
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 'lts/*'
+
+      - name: Install dependencies
+        run: npm install # または yarn install
+
+      - name: Build React application
+        run: npm run build # または yarn build
+
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: gh-pages
+          folder: build # ビルドされた出力フォルダ名 (Create React Appの場合)
+          repository-name: ${{ github.repository }}
+          user-name: ${{ github.event.pusher.name }}
+          user-email: ${{ github.event.pusher.email }}
