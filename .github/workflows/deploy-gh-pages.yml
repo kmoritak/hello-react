@@ -11,32 +11,26 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Show current directory (before)
-        run: pwd
-
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 'lts/*'
-          working-directory: ./hello # Node.js のセットアップも hello ディレクトリで行う
-
-      - name: Show current directory (after setup-node)
-        run: pwd
+          working-directory: ./hello
 
       - name: Install dependencies
         run: npm install
-        working-directory: ./hello # npm install を hello ディレクトリで実行
+        working-directory: ./hello
 
       - name: Build React application
         run: npm run build
-        working-directory: ./hello # npm run build を hello ディレクトリで実行
+        working-directory: ./hello
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GH_PAGES_TOKEN }} # シークレットとして設定したトークンを使用
           branch: gh-pages
-          folder: ./hello/build # ビルド出力フォルダに合わせて修正 (例: hello/build)
+          folder: ./hello/build # ビルド出力フォルダに合わせて修正
           repository-name: ${{ github.repository }}
-          user-name: ${{ github.event.pusher.name }}
-          user-email: ${{ github.event.pusher.email }}
+          # user-name: ${{ github.event.pusher.name }} # 不要
+          # user-email: ${{ github.event.pusher.email }} # 不要
